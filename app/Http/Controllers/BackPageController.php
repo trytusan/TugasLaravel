@@ -15,6 +15,13 @@ class BackPageController extends Controller
 
     }
 
+    public function items()
+    {
+        $datas = Product::paginate(3);
+        return view('backpage.items', compact('datas'));
+
+    }
+
     public function index(Request $request)
     {
         $datas = Product::query()
