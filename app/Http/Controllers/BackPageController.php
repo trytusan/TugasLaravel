@@ -15,23 +15,30 @@ class BackPageController extends Controller
 
     }
 
-    public function items()
+    public function items(Request $request)
     {
-        $datas = Product::paginate(3);
-        return view('backpage.items', compact('datas'));
+        $query = Product::query();
+        // Filter pencarian
+        if ($request->has('search') && $request->search != '') {
+            $query->where('name', 'like', '%' . $request->search . '%')
+                ->orWhere('description', 'like', '%' . $request->search . '%');
+        }
+        // Mendapatkan nilai filter yang dipilih dan mengonversinya menjadi integer
+        $filterValue = (int) $request->input('filter');
 
-    }
-
-    public function index(Request $request)
-    {
-        $datas = Product::query()
-            ->filterPrice($request->price_range) // Use scope for price filtering
-            ->search($request->search)          // Use scope for search
-            ->paginate(10)
-            ->appends($request->query());       // Preserve query params in pagination links
-
+        // Menggunakan kondisi filter berdasarkan harga
+        if ($filterValue == 5) {
+            // Menambahkan kondisi untuk harga kurang dari 50.000
+            $query->where('price_per_day', '<', 50000);
+        } elseif ($filterValue == 4) {
+            // Menambahkan kondisi untuk harga kurang dari 100.000
+            $query->where('price_per_day', '<', 100000);
+        } elseif ($filterValue == 3) {
+            // Menambahkan kondisi untuk harga kurang dari 500.000
+            $query->where('price_per_day', '<', 500000);
+        }
         // Paginate results
-        $datas = $datas->paginate(3)->appends($request->query());
+        $datas = $query->paginate(3)->appends($request->query());
         return view('backpage.items', compact('datas'));
     }
 

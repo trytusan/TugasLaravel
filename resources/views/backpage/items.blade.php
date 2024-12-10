@@ -9,41 +9,33 @@
         @endif
 
         <!-- Search, Filter, and Bulk Delete -->
-        <div class="flex justify-between items-center mb-6">
-            <form action="{{ route('admin.product.store') }}" method="GET" class="flex items-center w-full space-x-4">
+        <div class="flex flex-col md:flex-row md:justify-between items-center mb-6 space-y-4 md:space-y-0">
+            <!-- Search and Filter -->
+            <div class="flex items-center space-x-4 w-full">
                 <!-- Search Input -->
                 <input type="text" name="search" id="searchInput" placeholder="Search items..."
-                    class="border rounded-lg p-2 w-1/3 focus:outline-none focus:ring-2 focus:ring-purple-600"
+                    class="border rounded-lg p-2 w-full md:w-1/3 focus:outline-none focus:ring-2 focus:ring-purple-600"
                     value="{{ request('search') }}">
 
-                <!-- Price Filter Dropdown -->
-                <select name="price_range" id="priceRange" class="border rounded-lg p-2">
-                    <option value="">All Prices</option>
-                    <option value="0-50000" {{ request('price_range') == '0-50000' ? 'selected' : '' }}>0 - 50 ribu
-                    </option>
-                    <option value="50000-100000" {{ request('price_range') == '50000-100000' ? 'selected' : '' }}>50 - 100
-                        ribu</option>
-                    <option value="100000-200000" {{ request('price_range') == '100000-200000' ? 'selected' : '' }}>100 -
-                        200 ribu</option>
-                    <option value="200000-500000" {{ request('price_range') == '200000-500000' ? 'selected' : '' }}>200 -
-                        500 ribu</option>
-                    <option value="500000-1000000" {{ request('price_range') == '500000-1000000' ? 'selected' : '' }}>500
-                        ribu - 1 juta</option>
-                    <option value="1000000" {{ request('price_range') == '1000000' ? 'selected' : '' }}>1 juta ke atas
-                    </option>
-                </select>
-
-
-
-                <!-- Search Button -->
-                <button type="submit"
-                    class="px-4 py-2 bg-blue-600 text-white rounded-lg font-semibold transition hover:bg-blue-700">
-                    Search
-                </button>
-            </form>
+                <!-- Filter Dropdown -->
+                <form class="flex items-center space-x-2">
+                    <select name="filter"
+                        class="bg-gray-100 border border-gray-300 text-sm text-gray-700 py-2 px-4 rounded-md focus:outline-none focus:ring-2 focus:ring-purple-700">
+                        <option value="" disabled selected>All Price</option>
+                        <option value="5">Kurang dari 50,000</option>
+                        <option value="4">Kurang dari 100,000</option>
+                        <option value="3">Kurang dari 500,000</option>
+                    </select>
+                    <button type="submit"
+                        class="bg-blue-600 text-white py-2 px-4 text-sm rounded-md hover:bg-purple-800 transition">
+                        Search
+                    </button>
+                </form>
+            </div>
 
             <!-- Bulk Delete Form -->
-            <form id="deleteSelectedForm" action="{{ route('products.bulkDelete') }}" method="POST">
+            <form id="deleteSelectedForm" action="{{ route('products.bulkDelete') }}" method="POST"
+                class="flex space-x-2">
                 @csrf
                 @method('DELETE')
                 <button type="button" onclick="deleteSelectedItems()"
